@@ -9,7 +9,7 @@ metadata:
 spec:
   title: "Vercel's Algolia Integration Example on Cloudflare Workers and Supabase"
   summary: "Vercel's Algolia Integration Example — Algolia's InstantSearch over a Postgres products table, and a product page that reads the fields only the database holds — runs on Cloudflare Workers + Static Assets with its Postgres a Supabase project reached through Hyperdrive, the table and the template's demo products applied by db-migrate before the app serves and the Algolia keys the Worker's own secrets, inside the Cirrus baseline's repository conventions, and becomes an Orun baseline that takes a new product from nothing to live on stage and prod in one landing."
-  state: started
+  state: completed
   milestones:
     - name: "AL0 — the spec"
       exitCriteria:

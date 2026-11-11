@@ -10,9 +10,9 @@ database a **Supabase Postgres** project reached through **Cloudflare
 Hyperdrive**, both provisioned by Terraform through
 [Orun](https://github.com/sourceplane/orun) and the schema and the template's
 demo products applied by Orun's `db-migrate` (the way the
-[Lumen baseline](https://github.com/sourceplane/lumen) does it), deployed by
-[Orun](https://github.com/sourceplane/orun) to stage and prod on every merge.
-Packaging it as an Orun baseline is the next milestone (AL2).
+[Lumen baseline](https://github.com/sourceplane/lumen) does it), and packaged
+as an **Orun baseline**: one command takes a new product from nothing to live
+on stage and prod, in its own repository, under its own name — in ONE landing.
 
 The template's code is the code. What the port changes is what the Workers
 runtime, a fresh unattended deployment and Orun's rule that no SaaS key is
@@ -27,9 +27,60 @@ the app serves. Until the owner connects Algolia, the home page keeps the
 template's "search activates once…" notice and lists the catalogue straight
 from Postgres under it. Every table in `public` has row-level security, so
 Supabase's Data API serves none of it — the internal-only cost prices,
-suppliers and notes above all. See [`specs/epics/algolia-search`](specs/epics/algolia-search/README.md)
+suppliers and notes above all. What the baseline adds is everything needed to
+make a copy of it somebody else's, built the way
+[cirrus-baseline](https://github.com/sourceplane/cirrus-baseline) is. See [`specs/epics/algolia-search`](specs/epics/algolia-search/README.md)
 for the design, the milestones and the as-built status, including every
 departure.
+
+## Instantiating a product
+
+```bash
+git clone --depth 1 --branch <baseline-tag> https://github.com/sourceplane/algolia-search
+cd algolia-search
+orun new --blueprint repo-blueprint.yaml --out ~/products/acme-search --run-hooks --resume \
+  --set reponame=acme-search --set productname="Acme Cloud" \
+  --set githuborg=acme-inc --set subdomain=<workers-dev-subdomain>
+```
+
+Or, once the platform's registry lists it, from the Orun console (Baselines →
+`algolia-search` → Build). Two phases: **`01-product`** creates the
+repository, mints the five brokered credentials (Cloudflare and Supabase) and
+lands the whole product as one pull request, whose convergence on `main`
+provisions and deploys it per environment in a fixed order —
+
+```
+supabase ──▶ cloudflare-hyperdrive ──▶ db-migrate ──▶ web
+```
+
+— each edge `mode: enforced` on a push to main and advisory on a pull
+request; then **`02-docs`** records the live deployment from probed facts.
+**[BOOTSTRAP.md](BOOTSTRAP.md)** is the operator guide;
+[docs/phases/](docs/phases/README.md) has a page per phase. The Supabase
+organization needs room for two projects (stage and prod) — the free plan's
+limit.
+
+The new repository receives the **product only** — the app, the Terraform
+roots, the migrations, the tests, its CI, its tooling, a README of its own
+and its operating contract — renamed throughout to the product's name,
+repository, Worker, Supabase project and Hyperdrive config. None of this
+repository's machinery ships. The card asks for no Algolia key: the product
+goes live with search not connected, and its owner connects Algolia after the
+bootstrap — two optional secrets (`ALGOLIA_APP_ID`, `ALGOLIA_SEARCH_API_KEY`)
+and the Algolia connector in Algolia's dashboard (the product's README,
+"Connect Algolia").
+
+| What makes it a baseline | Where |
+|---|---|
+| The console card (inputs, secrets, programme) | `blueprint.yaml` |
+| The build document (modules, phases, hooks) | `repo-blueprint.yaml` |
+| This tree's identity, the product's README and the bootstrap's task contracts | `.baseline/` |
+| The rename engine (product-name seam: `apps/web/lib/site.ts`) | `tooling/rebrand/rebrand.mjs` |
+| The bootstrap's helpers (deferrals, redeploy marker, work-tree strip) | `tooling/bootstrap/` |
+| The deployment-record renderer | `hooks/render-deployment-docs.sh` |
+| The product's context pack | `ai/context/` |
+| The baseline's tests: contract, leak, offline bootstrap and plans, end to end (a headless Chrome running the search against an Algolia stand-in included) | `testing/`, `.github/workflows/baseline.yml` |
+| Cutting a `baseline-vN` tag | `.github/workflows/tag.yml` |
 
 ## What is here (the product)
 
@@ -84,3 +135,5 @@ carries.
 | Workflow | What it runs | Ships to a product |
 |---|---|---|
 | `ci.yml` | the Orun pipeline, and the only workflow a product carries: `orun plan --changed`, then one job per lane. A pull request runs the verify lanes (the app built and dry-deployed per environment, both Terraform roots checked and planned, the migrations planned), except the bootstrap's own landings (`orun/BASE-*`), where `plan` alone runs and nothing waits for it — the landing was checked in the build box; a merge applies, migrates and deploys stage → prod. The lanes do not typecheck, lint or run the tests: `baseline.yml`'s e2e tier does, on the landing, before each tag. It plans nothing while `intent.yaml` names the placeholder workspace `ws_CHANGE_ME`, as this repository does. A manual run (Orunbase's Deploy button, or Run workflow on `main`) plans the environment and components it names under the push-to-main trigger, so they deploy as a merge deploys them | yes |
+| `baseline.yml` | the baseline's own tiers: contract tests; the blueprint read by the pinned orun, the leak gate, the offline bootstrap and the product's own plans; the product built (the Algolia secrets kept out of it), migrated into a local Postgres, dry-deployed and served without Algolia and with it — its search run in a headless Chrome against an Algolia stand-in — and its table shut to the Data API's roles | no |
+| `tag.yml` | cuts a `baseline-vN` tag (manual) | no |
