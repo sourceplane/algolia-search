@@ -1,0 +1,48 @@
+/* The sources named, not detected: Tailwind 4's automatic detection reads
+   .gitignore only inside a git checkout, so in a CI job tree with no .git it
+   would also scan .next and .open-next build output. */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../components";
+
+@theme {
+  --color-supabase: #3ecf8e;
+  --color-algolia: #003dff;
+  /* Text-safe Algolia blue: #003dff fails WCAG AA on the dark surface. */
+  --color-algolia-text: #4d7cff;
+  --color-surface: #0a0a0a;
+  --color-card: #141414;
+  --color-border-subtle: #262626;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+::selection {
+  background: var(--color-algolia);
+  color: #fff;
+}
+
+body {
+  background: var(--color-surface);
+  color: #ededed;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* InstantSearch highlight marks (default CSS is not imported). */
+.ais-Highlight-highlighted,
+.ais-Snippet-highlighted {
+  background: transparent;
+  color: var(--color-supabase);
+  font-weight: 600;
+}
+
+.facet-checkbox {
+  accent-color: var(--color-supabase);
+}

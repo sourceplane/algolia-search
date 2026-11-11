@@ -8,7 +8,7 @@ The port keeps the page, the InstantSearch UI and its facets, the hit cards, the
 
 | Field | Value |
 |-------|-------|
-| Status | In progress — AL0 on main |
+| Status | In progress — AL1 on main: the site runs on Workers |
 | Cluster | **AL** (AL0–AL2) |
 | Owner(s) | `apps/web` (the pages, the search UI, `lib/db.ts`, `lib/algolia.ts`, `components/catalogue.tsx`, `scripts/migrate.mjs`) · `packages/db` (the migrations and their runner) · `tests/web`, `tests/db` · `infra/terraform/{supabase,cloudflare-hyperdrive}`, `infra/db-migrate` |
 | Builds on | `postgres-kysely` (its scaffolding, Supabase and Hyperdrive roots, migrations, health check and baseline machinery), `prisma-nextjs-blog` (the Worker-secrets push), and through them `postgres-drizzle-starter` and `lumen` |

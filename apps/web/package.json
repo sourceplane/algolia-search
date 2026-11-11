@@ -1,0 +1,41 @@
+{
+  "name": "@app/web",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build && opennextjs-cloudflare build --skipBuild --skipWranglerConfigCheck && opennextjs-cloudflare populateCache local",
+    "start": "next start -p 3000",
+    "preview": "opennextjs-cloudflare preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "wire:fixture": "node ../../tooling/wire/render.mjs --template wrangler.template.jsonc --out wrangler.jsonc --map wiring.fixture.json --env stage",
+    "db:migrate": "node scripts/migrate.mjs"
+  },
+  "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.11",
+    "algoliasearch": "^5.56.0",
+    "geist": "^1.5.1",
+    "instantsearch.js": "^4.122.0",
+    "next": "16.3.8",
+    "pg": "^8.22.0",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-instantsearch": "^7.39.1"
+  },
+  "devDependencies": {
+    "@app/eslint-config": "workspace:*",
+    "@app/tsconfig": "workspace:*",
+    "@cloudflare/workers-types": "^4.20250508.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.9.0",
+    "@types/pg": "^8.20.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9.27.0",
+    "eslint-config-next": "16.3.8",
+    "tailwindcss": "^4",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.151.0"
+  }
+}
