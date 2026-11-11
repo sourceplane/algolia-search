@@ -1,0 +1,14 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: AL-1
+  title: "The algolia-search epic doc set"
+spec:
+  goal: The epic (epic.yaml, README, design, implementation plan, risks, as-built status) and the three task contracts are on main, so every later change lands against a declared milestone
+  affects:
+    - specs/epics/algolia-search
+    - tasks
+  doneWhen:
+    - specs/epics/algolia-search has the six documents and tasks/ the three contracts
+    - the epic index lists the epic
+  gates: []
