@@ -1,0 +1,43 @@
+// wrangler.template.jsonc is the source and wrangler.jsonc is rendered from
+// it by tooling/wire: edit the template, never the render. Two renders:
+//
+//   - committed: the render from wiring.fixture.json (`pnpm run wire:fixture`),
+//     a placeholder Hyperdrive id. `wrangler dev`, `next dev`, the dev verify
+//     lane and the composition's structure check (which runs BEFORE the build,
+//     in a fresh checkout) all read it, so it has to exist without a build.
+//     Edit this file and re-render; tests/web fails when the two disagree.
+//   - deployed: the stage and prod lanes re-render it inside their own job
+//     tree, before the build, from the wiring document the
+//     `cloudflare-hyperdrive` Terraform root lease-publishes
+//     (WIRING_CLOUDFLARE_HYPERDRIVE_<ENV>, apps/web/component.yaml).
+//
+// The workers-assets composition deploys one environment per job with no
+// wrangler `--env`, so a placeholder token names the environment a render is
+// for.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "algolia-search-web",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "observability": { "enabled": true },
+  // The Supabase project's Postgres, fronted by Hyperdrive (pooled). lib/db.ts
+  // reads env.HYPERDRIVE.connectionString per request. Locally — `wrangler
+  // dev`, `next dev` — the binding points at the Supabase CLI's default
+  // database (`supabase start`).
+  //
+  // No Algolia key here: ALGOLIA_APP_ID and ALGOLIA_SEARCH_API_KEY are Worker
+  // SECRETS the deploy pushes (apps/web/component.yaml's buildCommand,
+  // tooling/wire/worker-secrets.mjs), `.dev.vars` locally.
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "@@wiring(cloudflare-hyperdrive/__ENV__:hyperdrive_id)@@",
+      "localConnectionString": "postgres://postgres:postgres@localhost:54322/postgres"
+    }
+  ]
+}

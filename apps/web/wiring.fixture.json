@@ -1,0 +1,4 @@
+{
+  "cloudflare-hyperdrive/stage": { "hyperdrive_id": "00000000000000000000000000000001", "hyperdrive_name": "stg-algolia-search-stage" },
+  "cloudflare-hyperdrive/prod": { "hyperdrive_id": "00000000000000000000000000000003", "hyperdrive_name": "prod-algolia-search-prod" }
+}
