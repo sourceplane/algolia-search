@@ -1,0 +1,20 @@
+apiVersion: orun.io/v1
+kind: TaskContract
+metadata:
+  name: AL-2
+  title: "The search on Workers and Supabase"
+spec:
+  goal: Vercel's Algolia Integration Example runs on Cloudflare Workers + Static Assets with its Postgres a Supabase project reached through Hyperdrive — upstream's query() on a pg client per request, the Algolia keys the Worker's secrets read per request, the table, row-level security and the demo products applied by db-migrate before the Worker serves — with its tests, and its README saying how it maps to Vercel
+  affects:
+    - apps/web
+    - packages/db
+    - infra
+    - tests
+    - tooling/wire
+    - pnpm-lock.yaml
+    - pnpm-workspace.yaml
+    - README.md
+  doneWhen:
+    - pnpm typecheck, lint, test and build are green
+    - wrangler dev over the build lists the twenty demo products and serves their pages from a migrated database, says search is not connected without the Algolia secrets, and with them a browser's InstantSearch renders hits from a stand-in
+  gates: []

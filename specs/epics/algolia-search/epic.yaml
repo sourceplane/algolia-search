@@ -1,0 +1,31 @@
+# The epic's declaration. metadata.name equals the directory name; metadata.key
+# is the task-key prefix this epic reserves (AL → AL-1, AL-2, …). Owner, target
+# date and health are the platform's — never written here.
+apiVersion: orun.io/v1
+kind: Epic
+metadata:
+  name: algolia-search
+  key: AL
+spec:
+  title: "Vercel's Algolia Integration Example on Cloudflare Workers and Supabase"
+  summary: "Vercel's Algolia Integration Example — Algolia's InstantSearch over a Postgres products table, and a product page that reads the fields only the database holds — runs on Cloudflare Workers + Static Assets with its Postgres a Supabase project reached through Hyperdrive, the table and the template's demo products applied by db-migrate before the app serves and the Algolia keys the Worker's own secrets, inside the Cirrus baseline's repository conventions, and becomes an Orun baseline that takes a new product from nothing to live on stage and prod in one landing."
+  state: started
+  milestones:
+    - name: "AL0 — the spec"
+      exitCriteria:
+        - "the repository is born with its intent, CI, tooling and spec index, and this doc set and the task contracts are on main"
+      tasks: [AL-1]
+    - name: "AL1 — the search on Workers and Supabase"
+      exitCriteria:
+        - "apps/web is the upstream template on Next.js 16.3.8, built by @opennextjs/cloudflare into one Worker with Static Assets; lib/db.ts keeps upstream's `query()`, run on one pg client per request over the HYPERDRIVE binding"
+        - "the Algolia application id and search-only key are the Worker's secrets, read per request and handed to InstantSearch as props, never in a build; without them the page shows the template's notice and the catalogue from Postgres"
+        - "the products table, row-level security and upstream's twenty demo products are packages/db migrations that infra/db-migrate applies before the Worker deploys, after the Supabase project and the Hyperdrive config Terraform creates"
+        - "`pnpm typecheck`, `pnpm lint`, `pnpm test` and `pnpm build` are green; `wrangler dev` over the build lists the catalogue and serves the product pages from a migrated database, and with the Algolia secrets set a browser's InstantSearch renders hits from a stand-in"
+        - "the README says how to run, test, deploy and connect it, and how every Vercel piece maps to Cloudflare and Supabase"
+      tasks: [AL-2]
+    - name: "AL2 — a baseline"
+      exitCriteria:
+        - "blueprint.yaml (the console card) and repo-blueprint.yaml (the build) take a new product from nothing to live on stage and prod in one landing (supabase → cloudflare-hyperdrive → db-migrate → web), then record it; the card asks for no Algolia key"
+        - "a product built from it carries the product only, renamed throughout to its own name, repository, Worker, Supabase project and Hyperdrive config, with the upstream template's links and Algolia's own key names left alone"
+        - "Baseline CI is green: contract tests, generated component docs, the blueprint read by the pinned orun, the leak gate, the offline bootstrap with the product's own plans, and the end-to-end tier — migrated into a real Postgres, built with no Algolia key reaching the bundle, dry-deployed and served without Algolia and with it (a headless Chrome running the search against a stand-in), and its table shut to the Data API's roles"
+      tasks: [AL-3]

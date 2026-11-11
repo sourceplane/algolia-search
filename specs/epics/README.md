@@ -7,5 +7,6 @@ folder is the adoption; the merge creates the epic in the workspace.
 
 | Epic | Cluster | Status | What it is |
 |------|---------|--------|------------|
+| [`algolia-search/`](./algolia-search/) | **AL** | In progress (AL0) | Vercel's Algolia Integration Example, its `query()` on a pg client per request over Hyperdrive to Supabase Postgres, its Algolia keys the Worker's secrets and its table and demo products applied by db-migrate — and an Orun baseline that instantiates it in one landing (AL2) |
 
 As-built ≠ intent: what shipped lives in each epic's `IMPLEMENTATION-STATUS.md`.
