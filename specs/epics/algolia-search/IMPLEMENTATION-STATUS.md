@@ -4,7 +4,7 @@
 |---|---|---|
 | AL0 — the spec | ✅ | AL-1 |
 | AL1 — the search on Workers and Supabase | ✅ | AL-2 |
-| AL2 — a baseline | planned | AL-3 |
+| AL2 — a baseline | ✅ | AL-3, tagged `baseline-v1` |
 
 ## Departures from the upstream template
 
